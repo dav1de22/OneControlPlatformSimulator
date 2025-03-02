@@ -83,11 +83,16 @@
 
         public string GetStatus()
         {
-            if (!IsPowerOn)
+            if (IsPowerOn)
             {
-                throw new DeviceOperationException("Cannot retrieve status: Device is powered off.");
+                return $"Powered: {(IsPowerOn ? "On" : "Off")}, Volume: {Volume}, Brightness: {Brightness}, Input: {InputSource}";
             }
-            return $"Powered: {(IsPowerOn ? "On" : "Off")}, Volume: {Volume}, Brightness: {Brightness}, Input: {InputSource}";
+            else
+            {
+                return "Powered: Off";
+            }
+           
+
         }
 
 
