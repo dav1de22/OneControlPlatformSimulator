@@ -1,12 +1,24 @@
 ﻿using System;
 using VirtualAVDeviceModule;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+
 
 class Program
 {
     static void Main(string[] args)
     {
-        // Create a device manager and add a device
-        var deviceManager = new DeviceManager();
+        // Setup service collection
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+
+        // Build service provider
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+
+        // Get the DeviceManager from the service provider
+        var deviceManager = serviceProvider.GetRequiredService<DeviceManager>();
+
+        // Add a device
         deviceManager.AddDevice("Projector1");
 
         // Get the device
@@ -24,5 +36,12 @@ class Program
         // Turn off the device
         device.PowerOff();
         Console.WriteLine(device.GetStatus());
+    }
+
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        // Register DeviceManager as a singleton
+        services.AddSingleton<DeviceManager>();
+        // Add other necessary services here
     }
 }

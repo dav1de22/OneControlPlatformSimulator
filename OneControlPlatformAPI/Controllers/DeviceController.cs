@@ -12,9 +12,9 @@ namespace OneControlPlatformAPI.Controllers
         private readonly DeviceManager _deviceManager;
         private readonly ILogger<DeviceController> _logger;
 
-        public DeviceController(ILogger<DeviceController> logger)
+        public DeviceController(ILogger<DeviceController> logger, ILogger<DeviceManager> deviceManagerLogger)
         {
-            _deviceManager = new DeviceManager();
+            _deviceManager = new DeviceManager(deviceManagerLogger);
             _logger = logger;
         }
 
@@ -70,6 +70,7 @@ namespace OneControlPlatformAPI.Controllers
             }
             catch (InvalidInputException ex)
             {
+                _logger.LogWarning($"Invalid input for device: {deviceId}");
                 return BadRequest(ex.Message);
             }
         }
@@ -77,6 +78,7 @@ namespace OneControlPlatformAPI.Controllers
         [HttpPost("{deviceId}/volume")]
         public ActionResult SetVolume(string deviceId, int volume)
         {
+            _logger.LogInformation($"Setting volume for device {deviceId} to {volume}.");
             try
             {
                 var device = _deviceManager.GetDevice(deviceId);
@@ -85,10 +87,12 @@ namespace OneControlPlatformAPI.Controllers
             }
             catch (DeviceOperationException ex)
             {
+                _logger.LogError(ex, $"Device operation failed for device: {deviceId}");
                 return NotFound(ex.Message);
             }
             catch (InvalidInputException ex)
             {
+                _logger.LogError(ex, $"Invalid input for device: {deviceId}");
                 return BadRequest(ex.Message);
             }
         }
@@ -96,6 +100,7 @@ namespace OneControlPlatformAPI.Controllers
         [HttpPost("{deviceId}/brightness")]
         public ActionResult SetBrightness(string deviceId, int brightness)
         {
+            _logger.LogInformation($"Setting brightness for device {deviceId} to {brightness}.");
             try
             {
                 var device = _deviceManager.GetDevice(deviceId);
@@ -104,10 +109,12 @@ namespace OneControlPlatformAPI.Controllers
             }
             catch (DeviceOperationException ex)
             {
+                _logger.LogError(ex, $"Device operation failed for device: {deviceId}");
                 return NotFound(ex.Message);
             }
             catch (InvalidInputException ex)
             {
+                _logger.LogError(ex, $"Invalid input for device: {deviceId}");
                 return BadRequest(ex.Message);
             }
         }
@@ -115,6 +122,7 @@ namespace OneControlPlatformAPI.Controllers
         [HttpPost("{deviceId}/input")]
         public ActionResult SetInputSource(string deviceId, string inputSource)
         {
+            _logger.LogInformation($"Setting input source for device {deviceId} to {inputSource}.");
             try
             {
                 var device = _deviceManager.GetDevice(deviceId);
@@ -123,10 +131,12 @@ namespace OneControlPlatformAPI.Controllers
             }
             catch (DeviceOperationException ex)
             {
+                _logger.LogError(ex, $"Device operation failed for device: {deviceId}");
                 return NotFound(ex.Message);
             }
             catch (InvalidInputException ex)
             {
+                _logger.LogError(ex, $"Invalid input for device: {deviceId}");
                 return BadRequest(ex.Message);
             }
         }
